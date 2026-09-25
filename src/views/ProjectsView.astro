@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = (await getCollection('projects', (e) => e.id.startsWith(`${lang}/`) && !e.data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title={t('projects.title')}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>{t('projects.title')}</h2>
+        <p>{t('projects.sub')}</p>
+      </div>
+      <div class="grid">
+        {projects.map((p) => <ProjectCard entry={p} />)}
+      </div>
+    </div>
+  </section>
+</Base>

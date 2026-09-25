@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  Content: any;
+  skills: { group: string; items: string[] }[];
+}
+const { lang, Content, skills } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Base title={t('about.title')}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>{t('about.title')}</h2>
+      </div>
+      <div class="layout">
+        <div class="prose intro">
+          <Content />
+        </div>
+        <aside class="skills">
+          {skills.map((g) => (
+            <div class="group">
+              <h4>{g.group}</h4>
+              <div class="chips">{g.items.map((s) => <span class="tag">{s}</span>)}</div>
+            </div>
+          ))}
+          <a class="btn btn-ghost gh" href="https://github.com/7yewh" target="_blank" rel="noopener">GitHub ↗</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 56px;
+    align-items: start;
+  }
+  .intro {
+    margin: 0;
+  }
+  .skills {
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .group h4 {
+    font-size: 13px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .gh {
+    align-self: flex-start;
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .skills {
+      position: static;
+    }
+  }
+</style>

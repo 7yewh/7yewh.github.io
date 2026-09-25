@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostItem from '../components/PostItem.astro';
+import { useTranslations, localePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = (await getCollection('projects', (e) => e.id.startsWith(`${lang}/`) && !e.data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+const featured = projects.filter((p) => p.data.featured).slice(0, 3);
+const posts = (await getCollection('blog', (e) => e.id.startsWith(`${lang}/`) && !e.data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+const [titleA, titleB] = t('hero.title').split('\n');
+---
+
+<Base>
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">{t('hero.eyebrow')}</p>
+      <h1>{titleA}<br />{titleB}</h1>
+      <p class="sub">{t('hero.subtitle')}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={localePath(lang, '/projects/')}>{t('hero.cta')}</a>
+        <a class="btn btn-ghost" href="https://github.com/7yewh" target="_blank" rel="noopener">{t('hero.github')}</a>
+      </div>
+    </div>
+  </section>
+
+  {featured.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>{t('home.featured')}</h2>
+          <p>{t('home.featured.sub')}</p>
+          <a class="more" href={localePath(lang, '/projects/')}>{t('home.all')}</a>
+        </div>
+        <div class="grid featured">
+          {featured.map((p, i) => <ProjectCard entry={p} large={i === 0} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {posts.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>{t('home.recent')}</h2>
+          <p>{t('home.recent.sub')}</p>
+          <a class="more" href={localePath(lang, '/blog/')}>{t('home.allPosts')}</a>
+        </div>
+        <div class="posts">
+          {posts.map((p) => <PostItem entry={p} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .hero {
+    padding: 140px 0 110px;
+    text-align: center;
+    background:
+      radial-gradient(900px 420px at 50% -8%, rgba(255, 255, 255, 0.09), transparent 70%);
+  }
+  .hero h1 {
+    margin: 14px auto 0;
+    font-size: clamp(44px, 7vw, 84px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    max-width: 16ch;
+    background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    margin: 26px auto 0;
+    max-width: 640px;
+    font-size: clamp(19px, 2.4vw, 24px);
+    line-height: 1.4;
+    color: var(--text-2);
+  }
+  .actions {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .featured {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .featured > :global(.large) {
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 734px) {
+    .hero {
+      padding: 96px 0 72px;
+    }
+    .featured {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

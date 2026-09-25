@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { useTranslations, localePath, formatDate } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  entry: CollectionEntry<'blog'>;
+}
+const { lang, entry } = Astro.props;
+const t = useTranslations(lang);
+const d = entry.data;
+const { Content } = await render(entry);
+---
+
+<Base title={d.title} description={d.summary}>
+  <article class="section">
+    <div class="container narrow">
+      <a class="back" href={localePath(lang, '/blog/')}>‹ {t('blog.back')}</a>
+      <header class="head">
+        <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
+        <h1>{d.title}</h1>
+        <p class="summary">{d.summary}</p>
+        {d.tags.length > 0 && <div class="tags">{d.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .narrow {
+    max-width: 760px;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .head {
+    margin-bottom: 44px;
+  }
+  time {
+    color: var(--text-3);
+    font-size: 14px;
+  }
+  h1 {
+    margin-top: 10px;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .summary {
+    margin: 16px 0 0;
+    font-size: 20px;
+    color: var(--text-2);
+  }
+  .tags {
+    margin-top: 18px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+</style>

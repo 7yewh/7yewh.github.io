@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostItem from '../components/PostItem.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const posts = (await getCollection('blog', (e) => e.id.startsWith(`${lang}/`) && !e.data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Base title={t('blog.title')}>
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>{t('blog.title')}</h2>
+        <p>{t('blog.sub')}</p>
+      </div>
+      <div class="list">
+        {posts.map((p) => <PostItem entry={p} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list {
+    max-width: 860px;
+  }
+</style>

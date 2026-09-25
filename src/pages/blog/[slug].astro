@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import PostView from '../../views/PostView.astro';
+import { splitEntryId } from '../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog', (e) => e.id.startsWith('zh/'));
+  return entries.map((entry) => ({ params: { slug: splitEntryId(entry.id).slug }, props: { entry } }));
+}
+const { entry } = Astro.props;
+---
+<PostView lang="zh" entry={entry} />

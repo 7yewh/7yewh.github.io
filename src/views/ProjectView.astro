@@ -1,0 +1,109 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { useTranslations, localePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  entry: CollectionEntry<'projects'>;
+}
+const { lang, entry } = Astro.props;
+const t = useTranslations(lang);
+const d = entry.data;
+const { Content } = await render(entry);
+---
+
+<Base title={d.title} description={d.summary}>
+  <article class="section">
+    <div class="container">
+      <a class="back" href={localePath(lang, '/projects/')}>‹ {t('project.back')}</a>
+      <header class="head">
+        {d.tags.length > 0 && <div class="tags">{d.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+        <h1>{d.title}</h1>
+        <p class="summary">{d.summary}</p>
+        <dl class="meta">
+          {d.period && (<div><dt>{t('project.period')}</dt><dd>{d.period}</dd></div>)}
+          {d.role && (<div><dt>{t('project.role')}</dt><dd>{d.role}</dd></div>)}
+          {d.stack.length > 0 && (<div><dt>{t('project.stack')}</dt><dd>{d.stack.join(' · ')}</dd></div>)}
+        </dl>
+        {d.links.length > 0 && (
+          <div class="links">
+            {d.links.map((l) => <a class="btn btn-ghost" href={l.url} target="_blank" rel="noopener">{l.label} ↗</a>)}
+          </div>
+        )}
+      </header>
+      {d.cover && <img class="cover" src={d.cover} alt={d.title} />}
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-bottom: 28px;
+    font-size: 15px;
+  }
+  .head {
+    max-width: 800px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+  .tags {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(36px, 5.5vw, 60px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .summary {
+    margin: 20px auto 0;
+    font-size: 21px;
+    color: var(--text-2);
+    max-width: 640px;
+  }
+  .meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+    margin: 32px 0 0;
+    font-size: 14px;
+  }
+  .meta div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meta dt {
+    color: var(--text-3);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .meta dd {
+    margin: 0;
+    color: var(--text);
+  }
+  .links {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cover {
+    width: 100%;
+    border-radius: var(--radius);
+    margin-bottom: 56px;
+    border: 1px solid var(--line);
+  }
+</style>

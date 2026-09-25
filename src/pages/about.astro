@@ -1,0 +1,6 @@
+---
+import AboutView from '../views/AboutView.astro';
+import { Content } from '../content/about/zh.md';
+import { skills } from '../data/skills';
+---
+<AboutView lang="zh" Content={Content} skills={skills.zh} />

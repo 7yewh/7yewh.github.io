@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { localePath, splitEntryId, formatDate } from '../i18n/utils';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { lang, slug } = splitEntryId(entry.id);
+const d = entry.data;
+---
+
+<a class="post" href={localePath(lang, `/blog/${slug}/`)}>
+  <time datetime={d.date.toISOString()}>{formatDate(d.date, lang)}</time>
+  <div>
+    <h3>{d.title}</h3>
+    <p>{d.summary}</p>
+    {d.tags.length > 0 && <div class="tags">{d.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+  </div>
+</a>
+
+<style>
+  .post {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line);
+    color: inherit;
+  }
+  .post:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .post:hover {
+    text-decoration: none;
+  }
+  .post:hover h3 {
+    color: var(--text-2);
+  }
+  time {
+    color: var(--text-3);
+    font-size: 14px;
+    padding-top: 4px;
+  }
+  h3 {
+    font-size: 22px;
+    transition: color 0.2s;
+  }
+  p {
+    margin: 8px 0 0;
+    color: var(--text-2);
+    font-size: 16px;
+  }
+  .tags {
+    margin-top: 12px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 734px) {
+    .post {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>
