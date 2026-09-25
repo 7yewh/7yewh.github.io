@@ -178,6 +178,28 @@ h1, h2, h3, h4 {
   background: var(--bg-hover);
   text-decoration: none;
 }
+/* 悬停时顶部一道细高光扫过 */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.07) 50%, transparent 70%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.card {
+  position: relative;
+}
+.card:hover::after {
+  opacity: 1;
+  animation: card-sheen 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+@keyframes card-sheen {
+  to { background-position: -120% 0; }
+}
 
 .tag {
   display: inline-block;
