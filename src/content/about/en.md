@@ -1,11 +1,18 @@
-I'm 7yewh, an embedded hardware and sensor-algorithm engineer.
+I'm 7yewh, a full-stack embedded engineer.
 
-What I do fits in one sentence: **turn the weak, noisy signals of the physical world into data that the layers above can trust.** That chain is long — analog front-ends, acquisition and demodulation firmware on the MCU, communication protocols and OTA, host-side visualisation and analysis, and finally squeezing algorithms (neural networks included) into a few dozen kilobytes of on-chip resources. I like to own the whole chain, because the bugs usually live in the seams between layers.
+In embedded, "full-stack" means something very concrete: **every layer between a bare board and a shippable product — I can do it, and I have.**
+
+- **Hardware**: requirements breakdown, part selection and BOM, schematic design and review, PCB layout, analog front-ends and power, board bring-up and signal-integrity debugging.
+- **Low-level software**: start-up code and linker scripts, peripheral drivers (GPIO / timers / ADC / DMA / every common bus), interrupts and real-time behaviour, low power, bootloaders and OTA.
+- **Systems & communication**: CAN / CAN FD, I2C / SPI / UART, USB, protocol design and multi-device networking, RTOS task design.
+- **Host side & algorithms**: host tools (visualisation, acquisition, configuration), data processing and filtering, sensor fusion and state estimation, on-device AI that squeezes neural networks onto an MCU.
+- **Engineering practice**: CMake multi-project builds, automated flashing and test, documentation and debug logs, version management from prototype to production.
 
 ## What I care about
 
-- **Reliability over flash.** Firmware that streams steadily for years without a reset is worth far more than one that occasionally posts an impressive number.
-- **Let the data speak.** When something "feels wrong", record it and plot it before concluding anything. Many an "algorithm bug" turned out to be a loose mechanical part, a colliding COM port, or a `read()` waiting for its timeout.
+- **Reliability over flash.** A product that runs for years without a reset is worth far more than a prototype that occasionally posts an impressive number.
+- **Bugs live between the layers.** Hardware blames software, software blames hardware — being full-stack means I can cross that gap myself and dig out the root cause.
+- **Let the data speak.** When something "feels wrong", record it and plot it before concluding anything.
 - **Write it down.** Every pitfall deserves a reproducible write-up — which is why this site has a blog.
 
 ## Contact
